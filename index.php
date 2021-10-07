@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -60,8 +60,8 @@ function createTable($sudoku){
         echo "<tr>";
             for($j =1; $j<=9;$j++){
             	echo "<td name='".$i."-".$j."'>";
-            	if ($sudoku[$i][$j]!==0){
-            		echo $sudoku[$i][$j];
+            	if ($sudoku[$i-1][$j-1]!==0){
+            		echo $sudoku[$i-1][$j-1];
             	} else {
             		echo "                
 	                <select name='s".$i."-".$j."'>
@@ -126,7 +126,7 @@ function createSudoku(){
 }
 
 
-createTable(createSudoku());
+createTable($sudokuS);
 
 ?>
 
