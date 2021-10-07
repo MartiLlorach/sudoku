@@ -59,9 +59,9 @@ function createTable($sudoku){
     for($i = 1;$i<=9;$i++){
         echo "<tr>";
             for($j =1; $j<=9;$j++){
-            	echo "<td name='".$i."-".$j."'>";
+            	echo "<td>";
             	if ($sudoku[$i-1][$j-1]!==0){
-            		echo $sudoku[$i-1][$j-1];
+            		echo "<p name='".$i."-".$j."'> " . $sudoku[$i-1][$j-1] . "</p>";
             	} else {
             		echo "                
 	                <select name='s".$i."-".$j."'>
