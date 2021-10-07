@@ -65,6 +65,7 @@ function createTable($sudoku){
             	} else {
             		echo "                
 	                <select name='s".$i."-".$j."'>
+					    <option disabled selected></option>
 					    <option value='1'>1</option>
 					    <option value='2'>2</option>
 					    <option value='3'>3</option>
@@ -94,13 +95,14 @@ function createSudoku(){
 				[0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
 	$numSeted = 0;
+	$cont=0;
 	while ($numSeted < 25){
 		$randN = rand(1,9);
 		$randX = rand(0,8);
 		$randY = rand(0,8);
 
 		$row = $sudoku[$randX];
-		
+
 		$col = [];
 		for ($i = 0;$i < 9; $i++){
 			array_push($col, $sudoku[$i][$randY]);
@@ -116,17 +118,26 @@ function createSudoku(){
         		array_push($quadrant, $sudoku[$x][$y]);	
         	}
         }
-		if ($sudoku[$randX][$randY] !== 0 && !in_array($randN, $row) && !in_array($randN, $col) && !in_array($randN, $quadrant)){
+       	// if ($cont==0){
+       	// 	echo $sudoku[$randX][$randY];
+       	// 	if ($sudoku[$randX][$randY] !== 0){
+        // 		echo "amogus";
+        // 	} else {
+        // 		echo "sugoma";
+        // 	}
+        // 	return "asd";
+       	// }
+        
+		if ($sudoku[$randX][$randY] == 0 && !in_array($randN, $row) && !in_array($randN, $col) && !in_array($randN, $quadrant)){
 			$sudoku[$randX][$randY] = $randN;
 			$numSeted++;
 		} 
 	}
-	print_r($sudoku);
 	return $sudoku;
 }
 
 
-createTable($sudokuS);
+createTable(createSudoku());
 
 ?>
 
