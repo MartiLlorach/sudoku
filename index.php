@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -18,6 +19,7 @@ $sudokuS = 	[[8,3,5,4,1,6,9,2,7],
 			 [6,5,2,7,8,1,3,9,4],
 			 [9,8,1,3,4,5,2,7,6],
 			 [3,7,4,9,6,2,8,1,5]];
+
 
 function no_dupes(array $input_array) {
     return count($input_array) === count(array_flip($input_array));
@@ -61,10 +63,10 @@ function createTable($sudoku){
             for($j =1; $j<=9;$j++){
             	echo "<td>";
             	if ($sudoku[$i-1][$j-1]!==0){
-            		echo "<p name='".$i."-".$j."'> " . $sudoku[$i-1][$j-1] . "</p>";
+            		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
             	} else {
             		echo "                
-	                <select name='s".$i."-".$j."'>
+	                <select name='".$i."-".$j."'>
 					    <option disabled selected></option>
 					    <option value='1'>1</option>
 					    <option value='2'>2</option>
@@ -96,7 +98,7 @@ function createSudoku(){
 
 	$numSeted = 0;
 	$cont=0;
-	while ($numSeted < 25){
+	while ($numSeted < 80){	//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		$randN = rand(1,9);
 		$randX = rand(0,8);
 		$randY = rand(0,8);
@@ -118,28 +120,61 @@ function createSudoku(){
         		array_push($quadrant, $sudoku[$x][$y]);	
         	}
         }
-       	// if ($cont==0){
-       	// 	echo $sudoku[$randX][$randY];
-       	// 	if ($sudoku[$randX][$randY] !== 0){
-        // 		echo "amogus";
-        // 	} else {
-        // 		echo "sugoma";
-        // 	}
-        // 	return "asd";
-       	// }
-        
+
 		if ($sudoku[$randX][$randY] == 0 && !in_array($randN, $row) && !in_array($randN, $col) && !in_array($randN, $quadrant)){
 			$sudoku[$randX][$randY] = $randN;
 			$numSeted++;
 		} 
 	}
+	echo '<p>' . $numSeted . '</p>';
 	return $sudoku;
 }
 
+function innitGame(){
+	// session_start();
+	// if (session_id()){
+	// 	$sudoku = $_SESSION['sudoku'];
+	// } else {
+		$sudoku = createSudoku();
+	// }
 
-createTable(createSudoku());
+	// $_SESSION['sudoku']= $sudoku;
+	createTable($sudoku);
+}
+
+if (!isset($_GET['game'])){
+	echo "<br><form mothod='GET'>
+			<input style='display: none' name='game' value='true'>
+			<input class='btn btn-primary' type='submit' value='EMPIEZA EL JUEGO'>
+		</form>";
+}
+
+if (isset($_GET['game'])){
+	// if (session_id()){
+	// 	session_destroy();
+	// } else {
+	// 	session_destroy();
+		innitGame();
+	// }
+	echo "
+				<input style='display: none' name='save' value='true'>
+				<input class='btn btn-primary' type='submit' value='GUARDA PARTIDA'>
+			</form>";
+}
+
+if (isset($_POST['save'])){
+	$sudoku = [];
+	for ($x = 0; $x < 9; $x++){
+		for ($y = 0; $y < 9; $y++){
+			array_push($sudoku, $_POST[$x . "-" . $y]);
+		}
+	}
+	$_SESSION['sudoku'] = $sudoku;
+	header('Location: '. "http://localhost/sudoku/?game=false");
+}
 
 ?>
+
 
 </body>
 </html>
