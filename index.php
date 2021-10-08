@@ -9,6 +9,7 @@
 <body>
 
 <?php
+session_start();
 
 function no_dupes(array $input_array) {
     return count($input_array) === count(array_flip($input_array));
@@ -21,11 +22,8 @@ function isSolved($sudoku){
 
 		$row = $sudoku[$ele]; 
 		for ($i = 0; $i < 9; $i++){
-			echo $i . $ele . "= " . $sudoku[$i][$ele] . "; ";
 			array_push($col, $sudoku[$i][$ele]);
 		}
-		echo "//";
-		print_r($col);
 		if (!no_dupes($row) || !no_dupes($col)){
 			return false;
 		}
@@ -47,6 +45,49 @@ function isSolved($sudoku){
 	}
 	return true;
 }
+
+function backTrackSolve($sudoku, $rowNum, $colNum){
+	for ($i = 0; $i <=8; $i++){
+		$row = $sudoku[$rowNum];
+		$col = [
+			$sudoku[0][$colNum],
+			$sudoku[1][$colNum],
+			$sudoku[2][$colNum],
+			$sudoku[3][$colNum],
+			$sudoku[4][$colNum],
+			$sudoku[5][$colNum],
+			$sudoku[6][$colNum],
+			$sudoku[7][$colNum],
+			$sudoku[8][$colNum]];
+		$block = [];
+		$xS = floor($colNum / 3) * 3;
+        $yS = ($rowNum % 3) * 3;
+        for ($x = $xS; $x < $xS + 3; $x++){
+        	for ($y = $yS; $y < $yS + 3; $y++){
+        		array_push($block, $sudoku[$y][$x]);	
+        	}
+        }
+        if (!in_array($i, $row) && !in_array($i, $col) && !in_array($i, $block)){
+        	$sudoku[$row][$col] = $i;
+        	if ($rowNum == 8 && $colNum == 8){
+				return true;
+			} else {
+				if ($colNum==8){
+					if (backTrackSolve($sudoku, $rowNum++, 0)){
+						return true;
+					}	
+				} else 
+					if (backTrackSolve($sudoku, $rowNum, $colNum++)){
+						return true;
+					}	
+				}
+				
+			}
+    }
+    $sudoku[$row][$col] = 0;
+    return false;		
+}
+
 
 function createSudoku(){
 	// $sudokuS = 	[[8,3,5,4,1,6,9,2,7],
@@ -72,7 +113,7 @@ function createSudoku(){
 
 	$numSeted = 0;
 	$cont=0;
-	while ($numSeted < 60){	//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	while ($numSeted < 20){	//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		$randN = rand(1,9);
 		$randX = rand(0,8);
 		$randY = rand(0,8);
@@ -113,7 +154,7 @@ function createTable($sudoku){
             	if ($sudoku[$i-1][$j-1]!==0){
             		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
             	} else { //EL POST NO PUEDE PILLAR LO QU ESTA DENTRO DEL SELECT
-            		echo "<input type='number'  name='" . $i . "-" . $j . "' min=1 max=9>
+            		echo "<input type='number'  name='" . $i . "-" . $j . "' min=1 max=9 value=' '>
 
             		"
 					;
@@ -126,11 +167,11 @@ function createTable($sudoku){
 }
 
 function innitGame(){
-	if (session_id() == ""){
-		session_start();
-		$sudoku = createSudoku();
-	} else {
+	if (isset($_SESSION['tablero'])){
 		$sudoku = $_SESSION['tablero'];
+	} else {
+		$sudoku = createSudoku();		
+		$_SESSION['tablero'] = $sudoku;
 	}
 	createTable($sudoku);
 }
@@ -152,26 +193,30 @@ if (isset($_GET['game'])){
 }
 
 if (isset($_POST['save'])){
-	$sudoku = [];
+	$sudokuT = [[],[],[],[],[],[],[],[],[]];
 	for ($x = 1; $x <= 9; $x++){
 		for ($y = 1; $y <= 9; $y++){
-			array_push($sudoku, $_POST[$y . "-" . $x]);
+			array_push($sudokuT[($x-1)], $_POST[$y . "-" . $x]);
 		}
-	}
-	$_SESSION['tabla'] = $sudoku;
+	}	
+	$_SESSION['tabla'] = $sudokuT;
 }
 
 if (isset($_POST['check'])){
-	$sudokuT = [];
+	$sudokuT = [[],[],[],[],[],[],[],[],[]];
 	for ($x = 1; $x <= 9; $x++){
 		for ($y = 1; $y <= 9; $y++){
-			array_push($sudokuT, $_POST[$y . '-' . $x]);
+			array_push($sudokuT[($x-1)], $_POST[$y . '-' . $x]);
 		}
 	}
-	
-	if (isSolved($sudokuT)){
-		echo "<h1>CORRECTO!!<h1>";
+	$_SESSION['tabla'] = $sudokuT;
+
+	if (backTrackSolve($sudokuT,0,0)){
+		echo "<h1>solucionable<h1>";
 	}
+	// if (isSolved($sudokuT)){
+	// 	echo "<h1>CORRECTO!!<h1>";
+	// }
 }
 
 
