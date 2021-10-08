@@ -10,17 +10,6 @@
 
 <?php
 
-$sudokuS = 	[[8,3,5,4,1,6,9,2,7],
-			 [2,9,6,8,5,7,4,3,1],
-			 [4,1,7,2,9,3,6,5,8],
-			 [5,6,9,1,3,4,7,8,2],
-			 [1,2,3,6,7,8,5,4,9],
-			 [7,4,8,5,2,9,1,6,3],
-			 [6,5,2,7,8,1,3,9,4],
-			 [9,8,1,3,4,5,2,7,6],
-			 [3,7,4,9,6,2,8,1,5]];
-
-
 function no_dupes(array $input_array) {
     return count($input_array) === count(array_flip($input_array));
 }
@@ -32,9 +21,11 @@ function isSolved($sudoku){
 
 		$row = $sudoku[$ele]; 
 		for ($i = 0; $i < 9; $i++){
-			array_push($col, $sudoku[$ele][$i]);
+			echo $i . $ele . "= " . $sudoku[$i][$ele] . "; ";
+			array_push($col, $sudoku[$i][$ele]);
 		}
-		
+		echo "//";
+		print_r($col);
 		if (!no_dupes($row) || !no_dupes($col)){
 			return false;
 		}
@@ -47,7 +38,7 @@ function isSolved($sudoku){
         $yS = ($b % 3) * 3;
         for ($x = $xS; $x < $xS + 3; $x++){
         	for ($y = $yS; $y < $yS + 3; $y++){
-        		array_push($block, $sudoku[$x][$y]);	
+        		array_push($block, $sudoku[$y][$x]);	
         	}
         }
         if (!no_dupes($block)){
@@ -56,36 +47,19 @@ function isSolved($sudoku){
 	}
 	return true;
 }
-function createTable($sudoku){
-    echo "<table>";
-    for($i = 1;$i<=9;$i++){
-        echo "<tr>";
-            for($j =1; $j<=9;$j++){
-            	echo "<td>";
-            	if ($sudoku[$i-1][$j-1]!==0){
-            		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
-            	} else {
-            		echo "                
-	                <select name='".$i."-".$j."'>
-					    <option disabled selected></option>
-					    <option value='1'>1</option>
-					    <option value='2'>2</option>
-					    <option value='3'>3</option>
-					    <option value='4'>4</option>
-					    <option value='5'>5</option>
-					    <option value='6'>6</option>
-					    <option value='7'>7</option>
-					    <option value='8'>8</option>
-					    <option value='9'>9</option>
-					</select>";
-				}
-                echo "</td>";
-            }
-        echo "</tr>";
-    }
-    echo "</table>";
-}
+
 function createSudoku(){
+	// $sudokuS = 	[[8,3,5,4,1,6,9,2,7],
+	// 			[2,9,6,8,5,7,4,3,1],
+	// 			[4,1,7,2,9,3,6,5,8],
+	// 			[5,6,9,1,3,4,7,8,2],
+	// 			[1,2,3,6,7,8,5,4,9],
+	// 			[7,4,8,5,2,9,1,6,3],
+	// 			[6,5,2,7,8,1,3,9,4],
+	// 			[9,8,1,3,4,5,2,7,6],
+	// 			[3,7,4,9,6,2,8,1,5]];
+	// return $sudokuS;
+
 	$sudoku =  [[0, 0, 0, 0, 0, 0, 0, 0, 0], 
 				[0, 0, 0, 0, 0, 0, 0, 0, 0], 
 				[0, 0, 0, 0, 0, 0, 0, 0, 0], 
@@ -98,7 +72,7 @@ function createSudoku(){
 
 	$numSeted = 0;
 	$cont=0;
-	while ($numSeted < 80){	//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	while ($numSeted < 60){	//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		$randN = rand(1,9);
 		$randX = rand(0,8);
 		$randY = rand(0,8);
@@ -130,15 +104,43 @@ function createSudoku(){
 	return $sudoku;
 }
 
-function innitGame(){
-	// session_start();
-	// if (session_id()){
-	// 	$sudoku = $_SESSION['sudoku'];
-	// } else {
-		$sudoku = createSudoku();
-	// }
+function createTable($sudoku){
+    echo "<form method=POST><table>";
+    for($i = 1;$i<=9;$i++){
+        echo "<tr>";
+            for($j =1; $j<=9;$j++){
+            	echo "<td>";
+            	if ($sudoku[$i-1][$j-1]!==0){
+            		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
+            	} else { //EL POST NO PUEDE PILLAR LO QU ESTA DENTRO DEL SELECT
+            		echo "                
+	                <select> 
+					    <option name='".$i."-".$j."' disabled selected value=' '></option>
+					    <option name='".$i."-".$j."' value='1'>1</option>
+					    <option name='".$i."-".$j."' value='2'>2</option>
+					    <option name='".$i."-".$j."' value='3'>3</option>
+					    <option name='".$i."-".$j."' value='4'>4</option>
+					    <option name='".$i."-".$j."' value='5'>5</option>
+					    <option name='".$i."-".$j."' value='6'>6</option>
+					    <option name='".$i."-".$j."' value='7'>7</option>
+					    <option name='".$i."-".$j."' value='8'>8</option>
+					    <option name='".$i."-".$j."' value='9'>9</option>
+					</select>";
+				}
+                echo "</td>";
+            }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
 
-	// $_SESSION['sudoku']= $sudoku;
+function innitGame(){
+	if (session_id() == ""){
+		session_start();
+		$sudoku = createSudoku();
+	} else {
+		$sudoku = $_SESSION['tablero'];
+	}
 	createTable($sudoku);
 }
 
@@ -150,28 +152,37 @@ if (!isset($_GET['game'])){
 }
 
 if (isset($_GET['game'])){
-	// if (session_id()){
-	// 	session_destroy();
-	// } else {
-	// 	session_destroy();
-		innitGame();
-	// }
+	innitGame();
 	echo "
-				<input style='display: none' name='save' value='true'>
-				<input class='btn btn-primary' type='submit' value='GUARDA PARTIDA'>
+				<input name='save' class='btn btn-primary' type='submit' value='GUARDA PARTIDA'> <br><br>
+				<input name='check' class='btn btn-primary' type='submit' value='COMPROVA'>
 			</form>";
+
 }
 
 if (isset($_POST['save'])){
 	$sudoku = [];
-	for ($x = 0; $x < 9; $x++){
-		for ($y = 0; $y < 9; $y++){
-			array_push($sudoku, $_POST[$x . "-" . $y]);
+	for ($x = 1; $x <= 9; $x++){
+		for ($y = 1; $y <= 9; $y++){
+			array_push($sudoku, $_POST[$y . "-" . $x]);
 		}
 	}
-	$_SESSION['sudoku'] = $sudoku;
-	header('Location: '. "http://localhost/sudoku/?game=false");
+	$_SESSION['tabla'] = $sudoku;
 }
+
+if (isset($_POST['check'])){
+	$sudokuT = [];
+	for ($x = 1; $x <= 9; $x++){
+		for ($y = 1; $y <= 9; $y++){
+			array_push($sudokuT, $_POST[$y . '-' . $x]);
+		}
+	}
+	
+	if (isSolved($sudokuT)){
+		echo "<h1>CORRECTO!!<h1>";
+	}
+}
+
 
 ?>
 
