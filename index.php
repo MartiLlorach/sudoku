@@ -106,26 +106,17 @@ function createSudoku(){
 
 function createTable($sudoku){
     echo "<form method=POST><table>";
-    for($i = 1;$i<=9;$i++){
+    for($j = 1;$j<=9;$j++){
         echo "<tr>";
-            for($j =1; $j<=9;$j++){
+            for($i =1; $i<=9;$i++){
             	echo "<td>";
             	if ($sudoku[$i-1][$j-1]!==0){
             		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
             	} else { //EL POST NO PUEDE PILLAR LO QU ESTA DENTRO DEL SELECT
-            		echo "                
-	                <select> 
-					    <option name='".$i."-".$j."' disabled selected value=' '></option>
-					    <option name='".$i."-".$j."' value='1'>1</option>
-					    <option name='".$i."-".$j."' value='2'>2</option>
-					    <option name='".$i."-".$j."' value='3'>3</option>
-					    <option name='".$i."-".$j."' value='4'>4</option>
-					    <option name='".$i."-".$j."' value='5'>5</option>
-					    <option name='".$i."-".$j."' value='6'>6</option>
-					    <option name='".$i."-".$j."' value='7'>7</option>
-					    <option name='".$i."-".$j."' value='8'>8</option>
-					    <option name='".$i."-".$j."' value='9'>9</option>
-					</select>";
+            		echo "<input type='number'  name='" . $i . "-" . $j . "' min=1 max=9>
+
+            		"
+					;
 				}
                 echo "</td>";
             }
