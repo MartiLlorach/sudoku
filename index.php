@@ -9,6 +9,7 @@
 <body>
 
 <?php
+ini_set('memory_limit','32M');
 session_start();
 
 function no_dupes(array $input_array) {
@@ -47,8 +48,27 @@ function isSolved($sudoku){
 }
 
 function backTrackSolve($sudoku, $rowNum, $colNum){
-	for ($i = 0; $i <=8; $i++){
-		$row = $sudoku[$rowNum];
+	// print_r($sudoku);
+	// echo "<br><br><br><br><br><br><br><br><br><br>";
+
+	if (is_int($sudoku[$rowNum][$colNum]) && $sudoku[$rowNum][$colNum]!=0){
+		if ($rowNum == 8 && $colNum == 8){
+			echo "te solució";
+			return true;
+		} else {
+			if ($colNum>7){
+				if (backTrackSolve($sudoku, $rowNum + 1, 0 )){
+					return true;
+				}
+			} else {
+				if (backTrackSolve($sudoku, $rowNum, $colNum + 1)){
+					return true;
+				}
+			}	
+		}
+	}
+	echo $colNum." ";
+	$row = $sudoku[$rowNum];
 		$col = [
 			$sudoku[0][$colNum],
 			$sudoku[1][$colNum],
@@ -67,24 +87,33 @@ function backTrackSolve($sudoku, $rowNum, $colNum){
         		array_push($block, $sudoku[$y][$x]);	
         	}
         }
+
+	for ($i = 1; $i <= 9; $i++){
         if (!in_array($i, $row) && !in_array($i, $col) && !in_array($i, $block)){
-        	$sudoku[$row][$col] = $i;
+			// echo "row: ". $rowNum . ", col: ". $colNum . "<br>";
         	if ($rowNum == 8 && $colNum == 8){
+				$sudoku[$rowNum][$colNum] = $i;
+				echo "te solució";
 				return true;
 			} else {
-				if ($colNum==8){
-					if (backTrackSolve($sudoku, $rowNum++, 0)){
+				if ($colNum>7){
+					$sudoku[$rowNum][$colNum] = $i;
+					if (backTrackSolve($sudoku, $rowNum + 1, 0 )){
 						return true;
-					}	
+					} else{
+						$sudoku[$rowNum][$colNum] = 0;
+					}
 				} else 
-					if (backTrackSolve($sudoku, $rowNum, $colNum++)){
+					$sudoku[$rowNum][$colNum] = $i;
+					if (backTrackSolve($sudoku, $rowNum, $colNum + 1)){
 						return true;
-					}	
+					} else{
+						$sudoku[$rowNum][$colNum] = 0;
+					}
 				}
 				
 			}
     }
-    $sudoku[$row][$col] = 0;
     return false;		
 }
 
@@ -154,10 +183,7 @@ function createTable($sudoku){
             	if ($sudoku[$i-1][$j-1]!==0){
             		echo "<input type='text' name='".$i."-".$j."' value=" . $sudoku[$i-1][$j-1] . " readonly>";
             	} else { //EL POST NO PUEDE PILLAR LO QU ESTA DENTRO DEL SELECT
-            		echo "<input type='number'  name='" . $i . "-" . $j . "' min=1 max=9 value=' '>
-
-            		"
-					;
+            		echo "<input type='number'  name='" . $i . "-" . $j . "' min=1 max=9 value=' '>";
 				}
                 echo "</td>";
             }
@@ -210,6 +236,17 @@ if (isset($_POST['check'])){
 		}
 	}
 	$_SESSION['tabla'] = $sudokuT;
+
+	$sudokuS = 	[[0,3,5,4,1,6,9,2,7],
+				[2,9,6,8,5,7,4,3,1],
+				[4,1,7,2,9,3,6,5,8],
+				[5,6,9,1,0,4,7,8,2],
+				[1,2,3,6,7,8,5,4,9],
+				[7,4,8,5,2,9,1,6,3],
+				[6,5,0,7,8,1,3,9,4],
+				[9,8,1,3,4,5,2,7,6],
+				[3,7,4,9,6,2,8,0,5]];
+
 
 	if (backTrackSolve($sudokuT,0,0)){
 		echo "<h1>solucionable<h1>";
