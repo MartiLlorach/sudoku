@@ -1,3 +1,4 @@
+/* TABLE STYLES */
 table {
   margin:1em auto;
 }
@@ -12,32 +13,35 @@ td:first-child {
   border-left:solid;
 }
 td:nth-child(3n) {
-  border-right:solid ;
+  border-right:solid;
 }
 tr:first-child {
   border-top:solid;
 }
 tr:nth-child(3n) td {
-  border-bottom:solid ;
+  border-bottom:solid;
 }
-input[type='text']{
-    height: fit-content;
-    text-align: center;
-    margin: 0 !important;
-}
-body {
-    text-align: center;
-}
-button, input, optgroup, select, textarea {
-  text-align: center;
-   width: inherit !important;
 
+/* INPUT STYLES */
+input{
+    height: inherit;
+    width: inherit;
+    text-align: center;
+    margin: 0;
+}
+.appInput{
+  font-weight: bold;
+}
+.userInput{
+  background: #dcdcdc;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number']{
-  background: lightgrey;
+
+/* GENERAL STYLES */
+body {
+    text-align: center;
 }

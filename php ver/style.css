@@ -1,0 +1,47 @@
+table {
+  margin:1em auto;
+}
+td {
+  height:30px;
+  width:30px;
+  border:1px solid;
+  text-align:center;
+  vertical-align: middle;
+}
+td:first-child {
+  border-left:solid;
+}
+td:nth-child(3n) {
+  border-right:solid ;
+}
+tr:first-child {
+  border-top:solid;
+}
+tr:nth-child(3n) td {
+  border-bottom:solid ;
+}
+input[type='text']{
+    height: fit-content;
+    text-align: center;
+    margin: 0 !important;
+}
+body {
+    text-align: center;
+}
+button, input, optgroup, select, textarea {
+  text-align: center;
+   width: inherit !important;
+
+}
+.appInput{
+  font-weight: bold;
+}
+.userInput{
+  background: #dcdcdc;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
