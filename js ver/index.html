@@ -3,9 +3,9 @@
         <link rel='stylesheet' type='text/css' href='style.css'>
         <script src='functions.js'></script>
     </head>
-    <body onload='test()'>
-        <button id='start' onclick='printSudoku(createSudoku())'>NUEVA PARTIDA</button>
-        <button id='load' onclick='loadSudoku()'>CARGA PARTIDA</button>
+    <body>
+        <button id='start' onclick='printSudoku(createSudoku())'>NOVA PARTIDA</button>
+        <button id='load' onclick='loadSudoku()'>CARREGA PARTIDA</button>
 
         <table id='sudoku'>
             <tr><td id=00><input type='number' value='' onchange='limiter(this);'></td> <td id=01><input type='number' value='' onchange='limiter(this);'></td> <td id=02><input type='number' value='' onchange='limiter(this);'></td> <td id=03><input type='number' value='' onchange='limiter(this);'></td> <td id=04><input type='number' value='' onchange='limiter(this);'></td> <td id=05><input type='number' value='' onchange='limiter(this);'></td> <td id=06><input type='number' value='' onchange='limiter(this);'></td> <td id=07><input type='number' value='' onchange='limiter(this);'></td> <td id=08><input type='number' value='' onchange='limiter(this);'></td></tr>
@@ -20,6 +20,9 @@
         </table>
 
         <button id='save' onclick='saveSudoku()'>GUARDA PARTIDA</button>
-        <button id='solve'>SOLUCIÓN</button>
+        <button id='solvable' onclick='tryIsSolvable()'>TE SOLUCIÓ?</button>
+        <br>
+        <button id='solve' onclick='trySolveSudoku()'>MOSTRA SOLUCIÓ</button>
+        <p></p>
     </body>
 </html>
