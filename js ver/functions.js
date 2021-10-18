@@ -44,6 +44,7 @@ function isSolvable(sudoku, rowNum, colNum){
         let num = sudoku[rowNum][colNum] + '';
         if (countInArray(row, num)==1 && countInArray(row, num)==1 && countInArray(row, num)==1){
             if (rowNum==8 && colNum==8){
+                console.log('solvable');
                 return true;
             } else if (colNum>7){
                 if (isSolvable(sudoku, (rowNum+1), 0)) return true;
@@ -55,10 +56,12 @@ function isSolvable(sudoku, rowNum, colNum){
     }
 
     for (let i = 1; i <= 9; i++) {
+        console.log('try')
         i = i + '';
         if (!inArray(row, i) && !inArray(col, i) && !inArray(block, i)){
             sudoku[rowNum][colNum] = i;
             if (rowNum==8 && colNum==8){
+                console.log('solvable');
                 return true;
             }
             if (colNum>7){
@@ -170,7 +173,15 @@ function isSolved(sudoku){
     return true;
 }
 
+function showLoading(){
+    document.getElementById('loadGif').setAttribute('style', 'display: inline');
+}
+function hideLoading(){
+    document.getElementById('loadGif').setAttribute('style', 'display: none');
+}
+
 function createSudoku(){
+    console.log('intento');
     sudoku =   [['', '', '', '', '', '', '', '', ''], 
 				['', '', '', '', '', '', '', '', ''], 
 				['', '', '', '', '', '', '', '', ''], 
@@ -181,58 +192,57 @@ function createSudoku(){
 				['', '', '', '', '', '', '', '', ''], 
 				['', '', '', '', '', '', '', '', '']];
     let numSetted = 0;
-    let solvable = false;
-    while (!solvable){
-        while (numSetted < 20) {
-            let randX = Math.floor(Math.random() * 9);
-            let randY = Math.floor(Math.random() * 9);
-            let randNum = Math.floor(Math.random() * 9)+1;
-            if (sudoku[randY][randX]==''){
-                let row = sudoku[randY];
-                let col = [];
-                for (let index = 0; index < 9; index++) {
-                    col.push(sudoku[index][randX]);
-                }
+    while (numSetted < 60) {
+        let randX = Math.floor(Math.random() * 9);
+        let randY = Math.floor(Math.random() * 9);
+        let randNum = Math.floor(Math.random() * 9)+1;
+        if (sudoku[randY][randX]==''){
+            let row = sudoku[randY];
+            let col = [];
+            for (let index = 0; index < 9; index++) {
+                col.push(sudoku[index][randX]);
+            }
 
-                let block = [];
-                let bX = Math.floor(randX / 3);
-                let bY = Math.floor(randY / 3);
-                let startX = bX * 3;
-                let startY = bY * 3;
+            let block = [];
+            let bX = Math.floor(randX / 3);
+            let bY = Math.floor(randY / 3);
+            let startX = bX * 3;
+            let startY = bY * 3;
 
-                for (let y = startY; y < startY+3; y++) {
-                    for (let x = startX; x < startX+3; x++){
-                        block.push(sudoku[y][x]);
-                    }
-                }
-
-                if (!inArray(row, randNum) && !inArray(col, randNum) && !inArray(block, randNum)){
-                    sudoku[randY][randX] = randNum;
-                    numSetted++;
+            for (let y = startY; y < startY+3; y++) {
+                for (let x = startX; x < startX+3; x++){
+                    block.push(sudoku[y][x]);
                 }
             }
-        }
-        let tempS = sudoku;
-        if (isSolvable(tempS,0,0)){
-            solvable = true;
-        } else {
-            console.log('intento fallido')
-            numSetted = 0;
-            sudoku=[['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', ''], 
-                    ['', '', '', '', '', '', '', '', '']];
+
+            if (!inArray(row, randNum) && !inArray(col, randNum) && !inArray(block, randNum)){
+                sudoku[randY][randX] = randNum;
+                numSetted++;
+            }
         }
     }
     return sudoku;
 }
 
+function newSudoku(){
+    // showLoading();
+    let sudokuSet = false;
+    let sudoku;
+    while (!sudokuSet){
+        sudoku = createSudoku();
+        tempSudoku = [];
+        for (var i = 0; i < sudoku.length; i++)
+            tempSudoku[i] = sudoku[i].slice();
+        if (isSolvable(tempSudoku,0,0)){
+            sudokuSet = true;
+        }
+    }
+    printSudoku(sudoku);
+    // hideLoading();
+}
+
 function printSudoku(sudoku){
+    console.log(sudoku);
     document.getElementsByTagName('p')[0].innerHTML = '';
     elements = document.getElementsByTagName("input");
     for (let index = 0; index < elements.length; index++) {
