@@ -1,6 +1,10 @@
 /* TABLE STYLES */
 table {
   margin:1em auto;
+  border-collapse: collapse;
+}
+tr {
+  border-collapse: collapse;
 }
 td {
   height:30px;
@@ -28,6 +32,7 @@ input{
     width: inherit;
     text-align: center;
     margin: 0;
+    border: none;
 }
 .appInput{
   font-weight: bold;
@@ -44,4 +49,8 @@ input::-webkit-inner-spin-button {
 /* GENERAL STYLES */
 body {
     text-align: center;
+}
+
+#loadGif{
+  width: 5%;
 }
